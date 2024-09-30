@@ -1,0 +1,33 @@
+﻿<div>
+    <h4>Test Cases</h4>
+
+    <table class="table">
+        <thead>
+            <tr scope="col">#</tr>
+            <tr scope="col">Test Case</tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td><button onclick="test('/test/expensedao')">Expense Repo -> Expense DAO -> SQL Database</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="border border-secondary" id="partialtestcontainer">
+
+    </div>
+</div>
+
+<script>
+    function test(testurl) {
+        $.ajax({
+            url: testurl,
+            dataType: 'html',
+            success: function (data) {
+                $('#partialtestcontainer').hide().fadeIn(1500);
+                $('#partialtestcontainer').html(data);
+            }
+        })
+    }
+</script>
