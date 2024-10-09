@@ -1,0 +1,87 @@
+﻿@model Personal_Budgeting_Web_App.Models.MonthlyExpenseModel
+
+@{
+    // Generates a Month Year string
+    // If there are expenses in the model, then base the month/year on the given expenses
+    // If there are no expenses in the model, then base the month/year on the current date
+
+    string dateString = $"{(ExpenseModel.MonthNames)(Model.Date.Month - 1)} {Model.Date.Year}";
+
+    int previousMonth = Model.Date.Month - 1,
+        previousYear = Model.Date.Year,
+        nextMonth = Model.Date.Month + 1,
+        nextYear = Model.Date.Year;
+
+    if (previousMonth == 0)
+    {
+        previousYear--;
+        previousMonth = 12;
+    }
+    if (nextMonth == 13)
+    {
+        nextYear++;
+        nextMonth = 1;
+    }
+
+}
+
+<style>
+    .seamless-class {
+        border: 0px;
+        padding: 0px 0px 0px 0px;
+    }
+
+</style>
+
+<div class="d-flex">
+    <h3 class="flex-fill">@dateString</h3>
+    <a href="AddExpense"><img src="~/img/add.png"></a>
+</div>
+<div class="d-flex">
+    <button class="flex-fill align-self-start seamless-class" onclick="getmonth(@previousMonth, @previousYear)"><h5>Previous Month</h5></button>
+    <button class="flex-fill align-self-end seamless-class" onclick="getmonth(@nextMonth, @nextYear)"><h5>Next Month</h5></button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Date
+            </th>
+            <th>
+                Description
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Expenses) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

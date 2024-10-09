@@ -17,5 +17,21 @@ namespace Personal_Budgeting_Web_App.Controllers
 
             return PartialView("TestResult", unitTesting.TestExpenseDAO());
         }
+
+        [Route("/test/addtestexpenses")]
+        public IActionResult AddTestExpenses()
+        {
+            UnitTesting unitTesting = new UnitTesting();
+
+            return PartialView("TestResult", unitTesting.TestAddExpenses());
+        }
+
+        [Route("/test/removetestexpenses")]
+        public IActionResult RemoveTestExpenses()
+        {
+            UnitTesting unitTesting = new UnitTesting();
+
+            return PartialView("TestResult", unitTesting.RemoveTestExpenses());
+        }
     }
 }
