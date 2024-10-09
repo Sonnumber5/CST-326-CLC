@@ -19,5 +19,21 @@ namespace Personal_Budgeting_Web_App.Models
         public DateTime Date { get; set; }
         [StringLength(1024, MinimumLength = 0, ErrorMessage = "The description must be no longer than 1024 characters")]
         public string Description { get; set; }
+
+        public enum MonthNames
+        {
+            January,
+            February,
+            March,
+            April,
+            May,
+            June,
+            July,
+            August,
+            September,
+            October,
+            November,
+            Devember
+        };
     }
 }

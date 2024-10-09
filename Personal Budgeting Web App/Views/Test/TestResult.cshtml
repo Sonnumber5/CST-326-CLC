@@ -1,26 +1,26 @@
 ﻿@model Personal_Budgeting_Web_App.Models.TestResultModel
 
 <div>
-    <h4>TestResultModel</h4>
-    <hr />
     <table class="table">
         <thead>
-            <tr scope="col">#</tr>
-            <tr scope="col">Test Case</tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Test Case</th>
+            </tr>
         </thead>
         <tbody>
             @for (int i = 1; i <= Model.SuccessfulTests.Count; i++)
             {
                 <tr>
                     <th scope="row">@i</th>
-                    <td>@Model.SuccessfulTests[i - 1]</td>
+                    <td style="color:green">@Model.SuccessfulTests[i - 1]</td>
                 </tr>
             }
             @for (int i = 1; i <= Model.FailedTests.Count; i++)
             {
                 <tr>
                     <th scope="row">@i</th>
-                    <td>@Model.FailedTests[i - 1]</td>
+                    <td style="color:red">@Model.FailedTests[i - 1]</td>
                 </tr>
             }
         </tbody>
