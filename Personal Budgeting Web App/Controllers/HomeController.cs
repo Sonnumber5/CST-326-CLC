@@ -3,6 +3,7 @@ using Personal_Budgeting_Web_App.Models;
 using Personal_Budgeting_Web_App.Services;
 using Personal_Budgeting_Web_App.Testing;
 using System.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Personal_Budgeting_Web_App.Controllers
 {
@@ -28,11 +29,17 @@ namespace Personal_Budgeting_Web_App.Controllers
 
         [Route("/ExpensesByDate")]
         public IActionResult ExpensesByDate(int month, int year)
-		{
-			DateTime startDate = new DateTime(year, month, 1),
-					 endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
+        {
+            DateTime startDate = new DateTime(year, month, 1),
+                     endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
 
-			return PartialView("ExpensesByDate", new MonthlyExpenseModel(new DateTime(year, month, 1), expenseRepo.GetExpenses(startDate, endDate, null, null, null, null)));
+            var expenses = expenseRepo.GetExpenses(startDate, endDate, null, null, null, null);
+            var monthlyExpenses = new MonthlyExpenseModel(new DateTime(year, month, 1), expenses);
+
+            // Calculate total expenses for the month
+            monthlyExpenses.TotalMonthlyExpenses = expenses.Sum(expense => expense.Price);
+
+            return PartialView("ExpensesByDate", monthlyExpenses);
         }
 
         [Route("/AddExpense")]
@@ -47,6 +54,8 @@ namespace Personal_Budgeting_Web_App.Controllers
 
             return RedirectToAction("Index");
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

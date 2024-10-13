@@ -38,6 +38,9 @@
     <a href="AddExpense"><img src="~/img/add.png"></a>
 </div>
 <div class="d-flex">
+    <h5 class="flex-fill">Total Spent This Month: @Model.TotalMonthlyExpenses.ToString("C")</h5>
+</div>
+<div class="d-flex">
     <button class="flex-fill align-self-start seamless-class" onclick="getmonth(@previousMonth, @previousYear)"><h5>Previous Month</h5></button>
     <button class="flex-fill align-self-end seamless-class" onclick="getmonth(@nextMonth, @nextYear)"><h5>Next Month</h5></button>
 </div>
