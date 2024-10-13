@@ -33,7 +33,7 @@ namespace Personal_Budgeting_Web_App.Models
             September,
             October,
             November,
-            Devember
+            December
         };
     }
 }
