@@ -60,7 +60,7 @@ namespace Personal_Budgeting_Web_App.Services
         /// <exception cref="NotImplementedException"></exception>
         public bool UpdateExpense(ExpenseModel expense)
         {
-            throw new NotImplementedException();
+            return expenseDAO.UpdateExpense(expense);
         }
     }
 }

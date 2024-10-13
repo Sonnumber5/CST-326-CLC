@@ -180,7 +180,44 @@ namespace Personal_Budgeting_Web_App.Services
 
         public bool UpdateExpense(ExpenseModel expense)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Updating expense in db...");
+            bool success = false;
+
+            string sqlStatement = @"UPDATE dbo.expenses 
+                            SET name = @name, 
+                                price = @price, 
+                                category = @category, 
+                                date = @date, 
+                                description = @description 
+                            WHERE id = @id";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    SqlCommand command = new SqlCommand(sqlStatement, connection);
+
+                    command.Parameters.Add("@id", System.Data.SqlDbType.Int).Value = expense.ID;
+                    command.Parameters.Add("@name", System.Data.SqlDbType.NVarChar, 45).Value = expense.Name;
+                    command.Parameters.Add("@price", System.Data.SqlDbType.Decimal, 18).Value = expense.Price;
+                    command.Parameters.Add("@category", System.Data.SqlDbType.NVarChar, 45).Value = expense.Category;
+                    command.Parameters.Add("@date", System.Data.SqlDbType.DateTime).Value = expense.Date;
+                    command.Parameters.Add("@description", System.Data.SqlDbType.NVarChar, 1024).Value = expense.Description;
+
+                    success = command.ExecuteNonQuery() > 0;
+
+                    connection.Close();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return success;
         }
+
     }
 }

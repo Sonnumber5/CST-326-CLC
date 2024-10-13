@@ -80,6 +80,21 @@ namespace Personal_Budgeting_Web_App.Testing
 
             try
             {
+                // Update test
+                Console.WriteLine("Updating in Unit Testing.");
+                expense.Description = "Updated description";
+                if (expenseRepo.UpdateExpense(expense))
+                    result.SuccessfulTests.Add("Updated expense successfully"); 
+                else
+                    result.FailedTests.Add("Failed to update expense");
+            }
+            catch (Exception ex)
+            {
+                result.FailedTests.Add(ex.Message);
+            }
+
+            try
+            {
                 // Delete test
                 if (expenseRepo.DeleteExpense(expense))
                     result.SuccessfulTests.Add("Deleted new expense from repo");
@@ -103,7 +118,8 @@ namespace Personal_Budgeting_Web_App.Testing
 
             for (int i = 1; i <= 25; i++)
             {
-                if (expenseRepo.AddExpense(new ExpenseModel {
+                if (expenseRepo.AddExpense(new ExpenseModel
+                {
                     Category = "!Test!",
                     Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, rnd.Next(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)) + 1, rnd.Next(24), rnd.Next(60), rnd.Next(60)),
                     Name = $"Test Expense {i}",
