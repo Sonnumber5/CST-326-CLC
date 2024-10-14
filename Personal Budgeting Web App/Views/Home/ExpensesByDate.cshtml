@@ -2,15 +2,15 @@
 
 @{
     // Generates a Month Year string
-    // If there are expenses in the model, then base the month/year on the given expenses
-    // If there are no expenses in the model, then base the month/year on the current date
+    // Changed model to include the selected month/year
 
     string dateString = $"{(ExpenseModel.MonthNames)(Model.Date.Month - 1)} {Model.Date.Year}";
 
     int previousMonth = Model.Date.Month - 1,
         previousYear = Model.Date.Year,
         nextMonth = Model.Date.Month + 1,
-        nextYear = Model.Date.Year;
+        nextYear = Model.Date.Year,
+        collapseIndex = 1;
 
     if (previousMonth == 0)
     {
@@ -23,12 +23,30 @@
         nextMonth = 1;
     }
 
+    SortedList<string, List<ExpenseModel>> sortedList = new SortedList<string, List<ExpenseModel>>();
+    SortedList<string, decimal> categorizedExpenses = new SortedList<string, decimal>();
+
+    foreach (ExpenseModel model in Model.Expenses)
+    {
+        if (!sortedList.ContainsKey(model.Category))
+            sortedList[model.Category] = new List<ExpenseModel>();
+        sortedList[model.Category].Add(model);
+
+        if (!categorizedExpenses.ContainsKey(model.Category))
+            categorizedExpenses[model.Category] = 0m;
+        categorizedExpenses[model.Category] += model.Price;
+    }
+
 }
 
 <style>
     .seamless-class {
         border: 0px;
         padding: 0px 0px 0px 0px;
+    }
+
+    .category-button {
+        background-color: gainsboro;
     }
 
 </style>
@@ -45,46 +63,67 @@
     <button class="flex-fill align-self-end seamless-class" onclick="getmonth(@nextMonth, @nextYear)"><h5>Next Month</h5></button>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Name
-            </th>
-            <th>
-                Price
-            </th>
-            <th>
-                Category
-            </th>
-            <th>
-                Date
-            </th>
-            <th>
-                Description
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Expenses) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div>
+@foreach (KeyValuePair<string, List<ExpenseModel>> kvp in sortedList)
+{
+        string id = $"collapsible{collapseIndex}";
+        <div class="d-flex">
+            <button class="btn btn-primary flex-fill category-button" type="button" data-bs-toggle="collapse" data-bs-target="#@id" aria-expanded="false" aria-controls="@id">
+                @kvp.Key
+            </button>
+            <p style="width: 30%; padding-left: 10px;">Category Spending: @categorizedExpenses[kvp.Key].ToString("C")</p>
+        </div>
+    <div style="min-height: 5px;">
+            <div class="collapse collapse-horizontal" id="@id">
+            <div class="card card-body" style="width: 100%;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Category
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                @foreach (ExpenseModel expense in kvp.Value)
+                {
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => expense.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => expense.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => expense.Category)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => expense.Date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => expense.Description)
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+                </table>
+            </div>
+        </div>
+    </div>
+    collapseIndex++;
+    }
+</div>
