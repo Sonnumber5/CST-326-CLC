@@ -26,6 +26,14 @@ namespace Personal_Budgeting_Web_App.Controllers
             return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(startDate, endDate, null, null, null, null)));
         }
 
+        public IActionResult FilterByCategory(ExpenseModel expense)
+        {
+            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
+                     endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), 23, 59, 59);
+            Console.WriteLine(expense.Category);
+            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(startDate, endDate, expense.Category, null, null, null)));
+        }
+
 
         [Route("/ExpensesByDate")]
         public IActionResult ExpensesByDate(int month, int year)
