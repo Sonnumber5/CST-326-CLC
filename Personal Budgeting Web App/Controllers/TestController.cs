@@ -15,7 +15,7 @@ namespace Personal_Budgeting_Web_App.Controllers
         {
             UnitTesting unitTesting = new UnitTesting();
 
-            return PartialView("TestResult", unitTesting.TestExpenseDAO());
+            return PartialView("TestResult", unitTesting.TestRepoCRUD());
         }
 
         [Route("/test/addtestexpenses")]

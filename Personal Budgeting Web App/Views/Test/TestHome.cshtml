@@ -3,21 +3,23 @@
 
     <table class="table">
         <thead>
-            <tr scope="col">#</tr>
-            <tr scope="col">Test Case</tr>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Test Case</th>
+            </tr>
         </thead>
         <tbody>
             <tr>
                 <th scope="row">1</th>
-                <td><button onclick="test('/test/expensedao')">Expense Repo -> Expense DAO -> SQL Database</button></td>
+                <td><button onclick="test('/test/expensedao', this);">CRUD Repo -> DAO -> SQL Database</button></td>
             </tr>
             <tr>
                 <th scope="row">2</th>
-                <td><button onclick="test('/test/addtestexpenses')">Add Test Expenses to Database</button></td>
+                <td><button onclick="test('/test/addtestexpenses', this);">Add Test Expenses to Database</button></td>
             </tr>
             <tr>
                 <th scope="row">3</th>
-                <td><button onclick="test('/test/removetestexpenses')">Remove Test Expenses from Database</button></td>
+                <td><button onclick="test('/test/removetestexpenses', this);">Remove Test Expenses from Database</button></td>
             </tr>
         </tbody>
     </table>
@@ -28,14 +30,20 @@
 </div>
 
 <script>
-    function test(testurl) {
+    function test(testurl, button) {
+        button.disabled = true;
         $.ajax({
             url: testurl,
             dataType: 'html',
             success: function (data) {
-                $('#partialtestcontainer').hide().fadeIn(1500);
-                $('#partialtestcontainer').html(data);
+                testupdate(data, button);
             }
-        })
+        });
+    }
+
+    function testupdate(data, button) {
+        $('#partialtestcontainer').hide().fadeIn(1500);
+        $('#partialtestcontainer').html(data);
+        button.disabled = false;
     }
 </script>

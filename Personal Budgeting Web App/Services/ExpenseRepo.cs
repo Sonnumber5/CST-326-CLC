@@ -46,18 +46,37 @@ namespace Personal_Budgeting_Web_App.Services
         /// <param name="startPrice">The start range of prices</param>
         /// <param name="endPrice">The end range of prices</param>
         /// <param name="name">The name of expenses to retrieve. Filters by contained e.g. 'case' returns 'testcase1'</param>
-        /// <returns></returns>
+        /// <returns>List of filtered ExpenseModel</returns>
         public List<ExpenseModel> GetExpenses(DateTime? startDate = null, DateTime? endDate = null, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null)
         {
             return expenseDAO.GetExpenses(startDate, endDate, category, startPrice, endPrice, name).OrderBy(d => d.Date).ToList();
         }
 
         /// <summary>
-        /// Not yet implemented
+        /// Returns filtered expenses from the SQL Database in a given month
+        /// Shortcut for requesting all expenses for a given month
         /// </summary>
-        /// <param name="expense"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="monthAndYear">DateTime containing the chosen month and year</param>
+        /// <param name="category">The category of expenses to retrieve</param>
+        /// <param name="startPrice">The start range of prices</param>
+        /// <param name="endPrice">The end range of prices</param>
+        /// <param name="name">The name of expenses to retrieve. Filters by contained e.g. 'case' returns 'testcase1'</param>
+        /// <returns>List of filtered ExpenseModel</returns>
+        public List<ExpenseModel> GetExpenses(DateTime monthAndYear, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null)
+        {
+            DateTime startDate = new DateTime(monthAndYear.Year, monthAndYear.Month, 1),
+                     endDate = new DateTime(monthAndYear.Year, monthAndYear.Month, DateTime.DaysInMonth(monthAndYear.Year, monthAndYear.Month), 23, 59, 59);
+
+            return GetExpenses(startDate, endDate, category, startPrice, endPrice, name);
+        }
+
+        /// <summary>
+        /// Updates an expense in the SQL Database
+        /// Requires the ExpenseModel's id to match the id in the database
+        /// The matching entry will be updated with information from the passed ExpenseModel
+        /// </summary>
+        /// <param name="expense">The ExpenseModel to update in the database</param>
+        /// <returns>True if an entry was updated</returns>
         public bool UpdateExpense(ExpenseModel expense)
         {
             return expenseDAO.UpdateExpense(expense);

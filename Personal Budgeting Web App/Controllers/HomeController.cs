@@ -20,32 +20,24 @@ namespace Personal_Budgeting_Web_App.Controllers
 
         public IActionResult Index()
         {
-            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-                     endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), 23, 59, 59);
-
-            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(startDate, endDate, null, null, null, null)));
+            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(DateTime.Now)));
         }
 
         public IActionResult FilterByCategory(ExpenseModel expense)
         {
-            DateTime startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1),
-                     endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month), 23, 59, 59);
             Console.WriteLine(expense.Category);
-            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(startDate, endDate, expense.Category, null, null, null)));
+            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(DateTime.Now, expense.Category)));
         }
 
 
         [Route("/ExpensesByDate")]
         public IActionResult ExpensesByDate(int month, int year)
         {
-            DateTime startDate = new DateTime(year, month, 1),
-                     endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month), 23, 59, 59);
-
-            var expenses = expenseRepo.GetExpenses(startDate, endDate, null, null, null, null);
+            var expenses = expenseRepo.GetExpenses(new DateTime(year, month, 1));
             var monthlyExpenses = new MonthlyExpenseModel(new DateTime(year, month, 1), expenses);
 
             // Calculate total expenses for the month
-            monthlyExpenses.TotalMonthlyExpenses = expenses.Sum(expense => expense.Price);
+            //monthlyExpenses.TotalMonthlyExpenses = expenses.Sum(expense => expense.Price); // Performed in constructor given the expense list
 
             return PartialView("ExpensesByDate", monthlyExpenses);
         }
@@ -62,8 +54,6 @@ namespace Personal_Budgeting_Web_App.Controllers
 
             return RedirectToAction("Index");
         }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
