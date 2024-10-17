@@ -5,22 +5,24 @@
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Test Case</th>
+                <th scope="col">Test Result</th>
             </tr>
         </thead>
         <tbody>
-            @for (int i = 1; i <= Model.SuccessfulTests.Count; i++)
+            @for (int i = 0; i < Model.SuccessfulTests.Count; i++)
             {
+                int x = i + 1;
                 <tr>
-                    <th scope="row">@i</th>
-                    <td style="color:green">@Model.SuccessfulTests[i - 1]</td>
+                    <th scope="row">@x</th>
+                    <td style="color:green">@Model.SuccessfulTests[i]</td>
                 </tr>
             }
-            @for (int i = 1; i <= Model.FailedTests.Count; i++)
+            @for (int i = 0; i < Model.FailedTests.Count; i++)
             {
+                int x = i + Model.SuccessfulTests.Count;
                 <tr>
-                    <th scope="row">@i</th>
-                    <td style="color:red">@Model.FailedTests[i - 1]</td>
+                    <th scope="row">@x</th>
+                    <td style="color:red">@Model.FailedTests[i]</td>
                 </tr>
             }
         </tbody>

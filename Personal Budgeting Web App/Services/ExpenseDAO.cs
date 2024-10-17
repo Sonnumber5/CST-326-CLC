@@ -7,9 +7,15 @@ namespace Personal_Budgeting_Web_App.Services
     {
         string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=budgetingdb;";
 
+        /// <summary>
+        /// Adds the given ExpenseModel to the SQL Database
+        /// Does not check for duplicates and ignores given ID
+        /// </summary>
+        /// <param name="expense">The ExpenseModel to add to the SQL Database</param>
+        /// <returns>True if an entry was added to the database</returns>
         public bool AddExpense(ExpenseModel expense)
         {
-            Console.WriteLine("Adding expense to db...");
+            Console.WriteLine($"Adding expense ({expense}) to db...");
             bool success = false;
 
             string sqlStatement = $"INSERT INTO dbo.expenses (name, price, category, date, description) VALUES (@name, @price, @category, @date, @description)";
@@ -37,13 +43,20 @@ namespace Personal_Budgeting_Web_App.Services
                     Console.WriteLine(ex.Message);
                 }
             }
+            Console.WriteLine(success ? "Successfully added expense to db..." : "Failed to add expense to db, is the server running?");
 
             return success;
         }
 
+        /// <summary>
+        /// Deletes the given ExpenseModel from the SQL Database by ID
+        /// Matches the ID of the ExpenseModel to an entry in the database
+        /// </summary>
+        /// <param name="expense">The ExpenseModel containing the ID of the entry to delete from the database</param>
+        /// <returns>True if an entry was found and removed from the database</returns>
         public bool DeleteExpense(ExpenseModel expense)
         {
-            Console.WriteLine("Deleting expense from db...");
+            Console.WriteLine($"Deleting expense (ID: {expense.ID}) from db...");
             if (expense.ID <= 0) return false;
 
             bool success = false;
@@ -70,12 +83,18 @@ namespace Personal_Budgeting_Web_App.Services
                 }
             }
 
+            Console.WriteLine(success ? "Successfully deleted expense from db..." : "Did not find matching expense to delete from db...");
+
             return success;
         }
 
+        /// <summary>
+        /// Returns all expenses from the database
+        /// </summary>
+        /// <returns>A List of ExpenseModel containing all expenses in the database</returns>
         public List<ExpenseModel> GetAllExpenses()
         {
-            Console.WriteLine("Retrieving expenses from db...");
+            Console.WriteLine("Retrieving all expenses from db...");
             List<ExpenseModel> expenseList = new List<ExpenseModel>();
 
             string sqlStatement = $"SELECT * FROM dbo.expenses";
@@ -114,12 +133,28 @@ namespace Personal_Budgeting_Web_App.Services
                 }
             }
 
+            Console.WriteLine($"Retrieved {expenseList.Count} expense{(expenseList.Count != 1 ? "s" : "")}");
+
             return expenseList;
         }
 
+        /// <summary>
+        /// Returns a filtered list of expenses from the database
+        /// </summary>
+        /// <param name="startDate">The earliest date, can be null</param>
+        /// <param name="endDate">The latest date, can be null</param>
+        /// <param name="category">The category of the item, can be null</param>
+        /// <param name="startPrice">The lowest value, can be null</param>
+        /// <param name="endPrice">The highest value, can be null</param>
+        /// <param name="name">Search for names containing this value, can be null</param>
+        /// <returns>A List of ExpenseModel containing expenses from the database matching the filters</returns>
         public List<ExpenseModel> GetExpenses(DateTime? startDate, DateTime? endDate, string? category, decimal? startPrice, decimal? endPrice, string? name)
         {
-            Console.WriteLine("Retrieving expenses from db...");
+            Console.WriteLine($"Retrieving filtered expenses from db...");
+            Console.WriteLine($"Date: {(startDate.HasValue ? startDate.Value : "Any")} to {(endDate.HasValue ? endDate.Value : "Any")}");
+            Console.WriteLine($"Category: {category ?? "Any"}");
+            Console.WriteLine($"Price: {(startPrice.HasValue ? startPrice.Value : "Any")} to {(endPrice.HasValue ? endPrice.Value : "Any")}");
+            Console.WriteLine($"Name: {name ?? "Any"}");
             List<ExpenseModel> expenseList = new List<ExpenseModel>();
 
             string sqlStatement = $"SELECT * FROM dbo.expenses";
@@ -175,12 +210,19 @@ namespace Personal_Budgeting_Web_App.Services
                 }
             }
 
+            Console.WriteLine($"Retrieved {expenseList.Count} expense{(expenseList.Count != 1 ? "s" : "")}");
+
             return expenseList;
         }
 
+        /// <summary>
+        /// Updates the given ExpenseModel in the SQL Database by ID
+        /// </summary>
+        /// <param name="expense">The ExpenseModel containing the matching ID and updated information to update in the database</param>
+        /// <returns>True if an entry was found and updated in the database</returns>
         public bool UpdateExpense(ExpenseModel expense)
         {
-            Console.WriteLine("Updating expense in db...");
+            Console.WriteLine($"Updating expense ({expense}) in db...");
             bool success = false;
 
             string sqlStatement = @"UPDATE dbo.expenses 
@@ -215,6 +257,7 @@ namespace Personal_Budgeting_Web_App.Services
                     Console.WriteLine(ex.Message);
                 }
             }
+            Console.WriteLine(success ? "Successfully update expense in db..." : "Did not find matching expense to update in db...");
 
             return success;
         }
