@@ -37,6 +37,9 @@
         categorizedExpenses[model.Category] += model.Price;
     }
 
+    // Calculate the total expenses for the month
+    decimal totalSpent = Model.TotalMonthlyExpenses;
+
 }
 
 <style>
@@ -64,67 +67,73 @@
     <button class="flex-fill align-self-end seamless-class" onclick="getmonth(@nextMonth, @nextYear)"><h5>Next Month</h5></button>
 </div>
 
-
 <div>
-@foreach (KeyValuePair<string, List<ExpenseModel>> kvp in sortedList)
-{
+    @foreach (KeyValuePair<string, List<ExpenseModel>> kvp in sortedList)
+    {
         string id = $"collapsible{collapseIndex}";
+        decimal categorySpent = categorizedExpenses[kvp.Key];
+        decimal percentage = totalSpent > 0 ? (categorySpent / totalSpent) * 100 : 0;
+
         <div class="d-flex">
             <button class="btn btn-primary flex-fill category-button" type="button" data-bs-toggle="collapse" data-bs-target="#@id" aria-expanded="false" aria-controls="@id">
                 @kvp.Key
             </button>
-            <p style="width: 30%; padding-left: 10px;">Category Spending: @categorizedExpenses[kvp.Key].ToString("C")</p>
+            <p style="width: 30%; padding-left: 10px;">
+                Category Spending: @categorySpent.ToString("C")
+                <span style="padding-left: 10px;">(@percentage.ToString("0.00")%)</span>
+            </p>
         </div>
-    <div style="min-height: 5px;">
-            <div class="collapse collapse-horizontal" id="@id">
-            <div class="card card-body" style="width: 100%;">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Name
-                            </th>
-                            <th>
-                                Price
-                            </th>
-                            <th>
-                                Category
-                            </th>
-                            <th>
-                                Date
-                            </th>
-                            <th>
-                                Description
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                @foreach (ExpenseModel expense in kvp.Value)
-                {
-                    <tbody>
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => expense.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => expense.Price)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => expense.Category)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => expense.Date)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => expense.Description)
-                            </td>
-                        </tr>
-                    </tbody>
-                }
-                </table>
+
+        <div style="min-height: 5px;">
+            <div class="collapse collapse-vertical" id="@id">
+                <div class="card card-body" style="width: 100%;">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Price
+                                </th>
+                                <th>
+                                    Category
+                                </th>
+                                <th>
+                                    Date
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (ExpenseModel expense in kvp.Value)
+                        {
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => expense.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => expense.Price)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => expense.Category)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => expense.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => expense.Description)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        }
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
-    collapseIndex++;
+        collapseIndex++;
     }
 </div>
