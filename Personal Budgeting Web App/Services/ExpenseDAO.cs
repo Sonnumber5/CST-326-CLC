@@ -18,7 +18,7 @@ namespace Personal_Budgeting_Web_App.Services
             Console.WriteLine($"Adding expense ({expense}) to db...");
             bool success = false;
 
-            string sqlStatement = $"INSERT INTO dbo.expenses (name, price, category, date, description) VALUES (@name, @price, @category, @date, @description)";
+            string sqlStatement = $"INSERT INTO dbo.expenses (name, price, category, date, description, essential) VALUES (@name, @price, @category, @date, @description, @essential)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -33,6 +33,7 @@ namespace Personal_Budgeting_Web_App.Services
                     command.Parameters.Add("@category", System.Data.SqlDbType.NVarChar, 45).Value = expense.Category;
                     command.Parameters.Add("@date", System.Data.SqlDbType.DateTime, 45).Value = expense.Date;
                     command.Parameters.Add("@description", System.Data.SqlDbType.NVarChar, 1024).Value = expense.Description;
+                    command.Parameters.Add("@essential", System.Data.SqlDbType.Bit).Value = expense.Essential;
 
                     success = command.ExecuteNonQuery() > 0;
 
@@ -119,7 +120,8 @@ namespace Personal_Budgeting_Web_App.Services
                             Price = reader.GetDecimal(2),
                             Category = reader.GetString(3),
                             Date = reader.GetDateTime(4),
-                            Description = reader.GetString(5)
+                            Description = reader.GetString(5),
+                            Essential = reader.GetBoolean(6)
                         };
                         expenseList.Add(expense);
                     }
@@ -148,13 +150,14 @@ namespace Personal_Budgeting_Web_App.Services
         /// <param name="endPrice">The highest value, can be null</param>
         /// <param name="name">Search for names containing this value, can be null</param>
         /// <returns>A List of ExpenseModel containing expenses from the database matching the filters</returns>
-        public List<ExpenseModel> GetExpenses(DateTime? startDate, DateTime? endDate, string? category, decimal? startPrice, decimal? endPrice, string? name)
+        public List<ExpenseModel> GetExpenses(DateTime? startDate, DateTime? endDate, string? category, decimal? startPrice, decimal? endPrice, string? name, bool? essential)
         {
             Console.WriteLine($"Retrieving filtered expenses from db...");
             Console.WriteLine($"Date: {(startDate.HasValue ? startDate.Value : "Any")} to {(endDate.HasValue ? endDate.Value : "Any")}");
             Console.WriteLine($"Category: {category ?? "Any"}");
             Console.WriteLine($"Price: {(startPrice.HasValue ? startPrice.Value : "Any")} to {(endPrice.HasValue ? endPrice.Value : "Any")}");
             Console.WriteLine($"Name: {name ?? "Any"}");
+            Console.WriteLine($"Essential only: {essential ?? false}");
             List<ExpenseModel> expenseList = new List<ExpenseModel>();
 
             string sqlStatement = $"SELECT * FROM dbo.expenses";
@@ -166,6 +169,7 @@ namespace Personal_Budgeting_Web_App.Services
             if (startPrice != null) filters.Add("price >= @startprice");
             if (endPrice != null) filters.Add("price <= @endprice");
             if (name != null && name.Length > 0) filters.Add($"name LIKE '%{name}%'");
+            if (essential == true) filters.Add("essential = 1");
 
             if (filters.Count > 0) sqlStatement += $" WHERE {String.Join(" AND ", filters)}";
 
@@ -196,7 +200,8 @@ namespace Personal_Budgeting_Web_App.Services
                             Price = reader.GetDecimal(2),
                             Category = reader.GetString(3),
                             Date = reader.GetDateTime(4),
-                            Description = reader.GetString(5)
+                            Description = reader.GetString(5),
+                            Essential = reader.GetBoolean(6)
                         };
                         expenseList.Add(expense);
                     }
@@ -247,6 +252,7 @@ namespace Personal_Budgeting_Web_App.Services
                     command.Parameters.Add("@category", System.Data.SqlDbType.NVarChar, 45).Value = expense.Category;
                     command.Parameters.Add("@date", System.Data.SqlDbType.DateTime).Value = expense.Date;
                     command.Parameters.Add("@description", System.Data.SqlDbType.NVarChar, 1024).Value = expense.Description;
+                    command.Parameters.Add("@essential", System.Data.SqlDbType.Bit).Value = expense.Essential;
 
                     success = command.ExecuteNonQuery() > 0;
 

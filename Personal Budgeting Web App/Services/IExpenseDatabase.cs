@@ -8,7 +8,7 @@ namespace Personal_Budgeting_Web_App.Services
 
         List<ExpenseModel> GetAllExpenses();
 
-        List<ExpenseModel> GetExpenses(DateTime? startDate, DateTime? endDate, string? category, decimal? startPrice, decimal? endPrice, string? name);
+        List<ExpenseModel> GetExpenses(DateTime? startDate, DateTime? endDate, string? category, decimal? startPrice, decimal? endPrice, string? name, bool? essential);
 
         bool UpdateExpense(ExpenseModel expense);
 

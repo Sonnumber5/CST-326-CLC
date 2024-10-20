@@ -23,10 +23,11 @@ namespace Personal_Budgeting_Web_App.Controllers
             return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(DateTime.Now)));
         }
 
-        public IActionResult FilterByCategory(ExpenseModel expense)
+        //TODO: Add filters by other properties
+        //This currently only filters by category and essential status
+        public IActionResult FilterExpenses(ExpenseModel expense)
         {
-            Console.WriteLine(expense.Category);
-            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(DateTime.Now, expense.Category)));
+            return View("Index", new MonthlyExpenseModel(DateTime.Now, expenseRepo.GetExpenses(DateTime.Now, expense.Category, null, null, null, expense.Essential)));
         }
 
 

@@ -11,6 +11,7 @@ CREATE TABLE [expenses] (
     [category]    NVARCHAR (45)                   NOT NULL,
     [date]        DATETIME                        NOT NULL,
     [description] NVARCHAR (1024)                 NULL,
+    [essential]   BIT                             NOT NULL,
     PRIMARY KEY CLUSTERED ([Id] ASC)
 );
 GO

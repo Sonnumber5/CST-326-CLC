@@ -188,7 +188,8 @@ namespace Personal_Budgeting_Web_App.Testing
                     Date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, rnd.Next(DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month)) + 1, rnd.Next(24), rnd.Next(60), rnd.Next(60)),
                     Name = $"Test Expense {i}",
                     Price = (decimal)(rnd.Next(1000) + rnd.NextDouble() + 1),
-                    Description = "A randomly generated expense for testing purposes!"
+                    Description = "A randomly generated expense for testing purposes!",
+                    Essential = rnd.NextDouble() > 0.5
                 }))
                     count++;
             }
