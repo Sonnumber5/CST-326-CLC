@@ -46,10 +46,11 @@ namespace Personal_Budgeting_Web_App.Services
         /// <param name="startPrice">The start range of prices</param>
         /// <param name="endPrice">The end range of prices</param>
         /// <param name="name">The name of expenses to retrieve. Filters by contained e.g. 'case' returns 'testcase1'</param>
+        /// <param name="essential">The essential status of the expense. Will return all essential expenses if true</param>
         /// <returns>List of filtered ExpenseModel</returns>
-        public List<ExpenseModel> GetExpenses(DateTime? startDate = null, DateTime? endDate = null, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null)
+        public List<ExpenseModel> GetExpenses(DateTime? startDate = null, DateTime? endDate = null, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null, bool? essential = null)
         {
-            return expenseDAO.GetExpenses(startDate, endDate, category, startPrice, endPrice, name).OrderBy(d => d.Date).ToList();
+            return expenseDAO.GetExpenses(startDate, endDate, category, startPrice, endPrice, name, essential).OrderBy(d => d.Date).ToList();
         }
 
         /// <summary>
@@ -61,13 +62,14 @@ namespace Personal_Budgeting_Web_App.Services
         /// <param name="startPrice">The start range of prices</param>
         /// <param name="endPrice">The end range of prices</param>
         /// <param name="name">The name of expenses to retrieve. Filters by contained e.g. 'case' returns 'testcase1'</param>
+        /// <param name="essential">The essential status of the expense. Will return all essential expenses if true</param>
         /// <returns>List of filtered ExpenseModel</returns>
-        public List<ExpenseModel> GetExpenses(DateTime monthAndYear, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null)
+        public List<ExpenseModel> GetExpenses(DateTime monthAndYear, string? category = null, decimal? startPrice = null, decimal? endPrice = null, string? name = null, bool? essential = null)
         {
             DateTime startDate = new DateTime(monthAndYear.Year, monthAndYear.Month, 1),
                      endDate = new DateTime(monthAndYear.Year, monthAndYear.Month, DateTime.DaysInMonth(monthAndYear.Year, monthAndYear.Month), 23, 59, 59);
 
-            return GetExpenses(startDate, endDate, category, startPrice, endPrice, name);
+            return GetExpenses(startDate, endDate, category, startPrice, endPrice, name, essential);
         }
 
         /// <summary>

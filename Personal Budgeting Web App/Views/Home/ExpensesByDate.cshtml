@@ -110,7 +110,9 @@
                         </thead>
                         @foreach (ExpenseModel expense in kvp.Value)
                         {
-                            <tbody>
+                            bool essential = expense.Essential;
+                            @Html.Raw("<tbody " + (essential ? "class=\"essential\"" : "") + ">");
+                            
                                 <tr>
                                     <td>
                                         @Html.DisplayFor(modelItem => expense.Name)
@@ -128,7 +130,7 @@
                                         @Html.DisplayFor(modelItem => expense.Description)
                                     </td>
                                 </tr>
-                            </tbody>
+                            @Html.Raw("</tbody>");
                         }
                     </table>
                 </div>

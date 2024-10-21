@@ -20,3 +20,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.essential {
+    background: #ff9f9f;
+}
